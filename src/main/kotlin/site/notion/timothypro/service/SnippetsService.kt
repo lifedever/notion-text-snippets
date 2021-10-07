@@ -25,6 +25,8 @@ class SnippetsService {
                     tags.put(mapOf("name" to txt))
                 }
             }
+        }else {
+            tags.put(mapOf("name" to "未分类"))
         }
         val page = PageObj()
         val properties: MutableMap<String, Any> =

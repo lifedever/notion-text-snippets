@@ -10,7 +10,7 @@
     </parent>
     <groupId>site.notion.timothy-pro</groupId>
     <artifactId>notion-wechat-snippets</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>notion-wechat-snippets</name>
     <description>notion-wechat-snippets</description>
     <properties>
@@ -79,6 +79,7 @@
                 </dependencies>
             </plugin>
         </plugins>
+        <finalName>${artifactId}</finalName>
     </build>
 
 </project>
