@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>site.notion.timothy-pro</groupId>
-    <artifactId>notion-wechat-snippets</artifactId>
+    <artifactId>notion-text-snippets</artifactId>
     <version>0.0.1</version>
     <name>notion-wechat-snippets</name>
     <description>notion-wechat-snippets</description>
