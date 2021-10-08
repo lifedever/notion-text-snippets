@@ -7,7 +7,7 @@ Notion + iOS快捷指令实现的随时随地文本收集功能
 
 ## 第一步：创建 integration
 
-打开 https://www.notion.so/my-integrations，创建一个integration，并记录token。
+打开 [my integrations](https://www.notion.so/my-integrations) ,创建一个integration，并记录token。
 
 ## 第二步：创建 Database
 
