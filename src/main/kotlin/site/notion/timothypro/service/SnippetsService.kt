@@ -43,7 +43,7 @@ class SnippetsService {
                 )
             )
         if (tags.isNotEmpty()) {
-            properties["Tags"] = mapOf(
+            properties["标签"] = mapOf(
                 "multi_select" to tags
             )
         }

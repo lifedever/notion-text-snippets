@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import site.notion.timothypro.bean.PageObj
@@ -26,6 +27,7 @@ class NotionService {
     @Value("\${app.notion.notion-version}")
     private lateinit var notionVersion: String
     private var client: OkHttpClient? = null
+    private val logger = LoggerFactory.getLogger(NotionService::class.java)
 
     companion object {
         val JSON: MediaType = "application/json; charset=utf-8".toMediaType()
@@ -46,10 +48,12 @@ class NotionService {
 
     fun createPage(page: PageObj): Response {
         page.parent = PageObj.Parent(parentId)
+        val data = JSONObject(page).toString()
         val request = initPostRequest("https://api.notion.com/v1/pages")
             .post(
-                JSONObject(page).toString().toRequestBody(JSON)
+                data.toRequestBody(JSON)
             ).build()
+        logger.info("Post JSON: $data")
         return this.getClient().newCall(request).execute()
     }
 
