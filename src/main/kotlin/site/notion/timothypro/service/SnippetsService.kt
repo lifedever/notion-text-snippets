@@ -25,9 +25,12 @@ class SnippetsService {
                     tags.put(mapOf("name" to txt))
                 }
             }
-        }else {
+        } else {
             tags.put(mapOf("name" to "未分类"))
         }
+
+        val blocks = texts.first().split("\n")
+
         val page = PageObj()
         val properties: MutableMap<String, Any> =
             mutableMapOf(
@@ -36,7 +39,7 @@ class SnippetsService {
                         mapOf(
                             "type" to "text",
                             "text" to mapOf(
-                                "content" to data
+                                "content" to blocks.first()
                             )
                         )
                     )
@@ -48,6 +51,22 @@ class SnippetsService {
             )
         }
         page.properties = properties
+        page.children = blocks.filter { !it.isNullOrBlank() }.map { block ->
+            mutableMapOf(
+                "object" to "block",
+                "type" to "paragraph",
+                "paragraph" to mapOf(
+                    "text" to listOf(
+                        mapOf(
+                            "type" to "text",
+                            "text" to mapOf(
+                                "content" to block
+                            )
+                        )
+                    )
+                )
+            )
+        }
         return notionService.createPage(page)
     }
 }

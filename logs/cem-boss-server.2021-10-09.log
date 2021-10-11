@@ -1,0 +1,25 @@
+[2021-10-09 22:24:51.754]  INFO 3939 --- [main] s.n.t.NotionWechatSnippetsApplicationKt  : Starting NotionWechatSnippetsApplicationKt using Java 1.8.0_282 on gefangshuaiMacBook-Pro.local with PID 3939 (/Users/gefangshuai/Documents/Dev/myspace/projects/notion-text-snippets/target/classes started by gefangshuai in /Users/gefangshuai/Documents/Dev/myspace/projects/notion-text-snippets)
+[2021-10-09 22:24:51.758]  INFO 3939 --- [main] s.n.t.NotionWechatSnippetsApplicationKt  : The following profiles are active: prod
+[2021-10-09 22:24:53.389]  INFO 3939 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 65000 (http)
+[2021-10-09 22:24:53.410]  INFO 3939 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+[2021-10-09 22:24:53.410]  INFO 3939 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.53]
+[2021-10-09 22:24:53.516]  INFO 3939 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+[2021-10-09 22:24:53.516]  INFO 3939 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1700 ms
+[2021-10-09 22:24:54.278]  INFO 3939 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 65000 (http) with context path ''
+[2021-10-09 22:24:54.291]  INFO 3939 --- [main] s.n.t.NotionWechatSnippetsApplicationKt  : Started NotionWechatSnippetsApplicationKt in 3.11 seconds (JVM running for 3.932)
+[2021-10-09 22:25:05.267]  INFO 3939 --- [http-nio-65000-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2021-10-09 22:25:05.268]  INFO 3939 --- [http-nio-65000-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[2021-10-09 22:25:05.269]  INFO 3939 --- [http-nio-65000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+[2021-10-09 22:30:37.819]  INFO 4056 --- [main] s.n.t.NotionWechatSnippetsApplicationKt  : Starting NotionWechatSnippetsApplicationKt using Java 1.8.0_282 on gefangshuaiMacBook-Pro.local with PID 4056 (/Users/gefangshuai/Documents/Dev/myspace/projects/notion-text-snippets/target/classes started by gefangshuai in /Users/gefangshuai/Documents/Dev/myspace/projects/notion-text-snippets)
+[2021-10-09 22:30:37.823]  INFO 4056 --- [main] s.n.t.NotionWechatSnippetsApplicationKt  : The following profiles are active: prod
+[2021-10-09 22:30:38.884]  INFO 4056 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 65000 (http)
+[2021-10-09 22:30:38.898]  INFO 4056 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+[2021-10-09 22:30:38.899]  INFO 4056 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.53]
+[2021-10-09 22:30:38.988]  INFO 4056 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+[2021-10-09 22:30:38.988]  INFO 4056 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1113 ms
+[2021-10-09 22:30:39.577]  INFO 4056 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 65000 (http) with context path ''
+[2021-10-09 22:30:39.589]  INFO 4056 --- [main] s.n.t.NotionWechatSnippetsApplicationKt  : Started NotionWechatSnippetsApplicationKt in 2.222 seconds (JVM running for 2.998)
+[2021-10-09 22:33:12.078]  INFO 4056 --- [http-nio-65000-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2021-10-09 22:33:12.078]  INFO 4056 --- [http-nio-65000-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[2021-10-09 22:33:12.080]  INFO 4056 --- [http-nio-65000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+[2021-10-09 22:33:12.236]  INFO 4056 --- [http-nio-65000-exec-1] s.n.timothypro.service.NotionService     : Post JSON: {"parent":{"database_id":"a1beeb546ad347649c738f8748389e07"},"properties":{"Name":{"title":[{"type":"text","text":{"content":"测试文本收集😄"}}]},"标签":{"multi_select":[{"name":"未分类"}]}}}

@@ -8,7 +8,8 @@ import cn.hutool.json.JSONObject
  */
 data class PageObj(
     var parent: Parent? = null,
-    var properties: MutableMap<String, Any>? = null
+    var properties: MutableMap<String, Any>? = null,
+    var children: List<MutableMap<String, Any>>? = null,
 ) {
     data class Parent(
         val database_id: String
