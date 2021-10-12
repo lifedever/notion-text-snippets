@@ -27,7 +27,7 @@ Notion + iOS快捷指令实现的随时随地文本收集功能
 
 # 快捷指令配置
 
-![img_1.png](img_1.png)
+![img_4.png](img_4.png)
 
 ## 说明
 
