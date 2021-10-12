@@ -17,20 +17,20 @@ class SnippetsService {
     private lateinit var notionService: NotionService
 
     fun save(data: String): Response {
-        val texts = data.split("#")
+        val blocks = data.split("\n")
+        if (blocks.isEmpty()) throw Exception("no data!")
+        // 标签
         val tags = JSONArray()
-        if (texts.size > 1) {
-            texts.forEachIndexed { index, txt ->
-                if (index > 0) {
-                    tags.put(mapOf("name" to txt))
+        blocks.findLast { it.contains("#") }?.let { block ->
+            block.split("#").lastOrNull()?.trim().let { tag ->
+                if (tag == null) {
+                    tags.put(mapOf("name" to "未分类"))
+                } else {
+                    tags.put(mapOf("name" to tag))
                 }
             }
-        } else {
-            tags.put(mapOf("name" to "未分类"))
         }
-
-        val blocks = texts.first().split("\n")
-
+        // 页面
         val page = PageObj()
         val properties: MutableMap<String, Any> =
             mutableMapOf(
@@ -51,7 +51,7 @@ class SnippetsService {
             )
         }
         page.properties = properties
-        page.children = blocks.filter { !it.isNullOrBlank() }.map { block ->
+        page.children = blocks.filter { it.isNotBlank() }.map { block ->
             mutableMapOf(
                 "object" to "block",
                 "type" to "paragraph",
