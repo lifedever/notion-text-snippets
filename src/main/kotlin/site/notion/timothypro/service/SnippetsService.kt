@@ -1,11 +1,14 @@
 package site.notion.timothypro.service
 
 import cn.hutool.json.JSONArray
-import cn.hutool.json.JSONObject
 import okhttp3.Response
+import org.apache.commons.validator.routines.UrlValidator
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import site.notion.timothypro.bean.PageObj
+
 
 /**
  * @author gefangshuai
@@ -22,16 +25,76 @@ class SnippetsService {
         // 标签
         val tags = JSONArray()
         blocks.findLast { it.contains("#") }?.let { block ->
-            block.split("#").lastOrNull()?.trim().let { tag ->
-                if (tag == null) {
-                    tags.put(mapOf("name" to "未分类"))
-                } else {
-                    tags.put(mapOf("name" to tag))
-                }
+            block.split("#").lastOrNull()?.trim()?.let { tag ->
+                tags.put(mapOf("name" to tag))
             }
+        } ?: let {
+            tags.put(mapOf("name" to "未分类"))
         }
         // 页面
+        val page = if (blocks.size == 1) {
+            val url = if (blocks.first().contains("#") && blocks.first().split("#").size == 2) {
+                blocks.first().split("#").first()
+            } else {
+                blocks.first()
+            }.trim()
+            if (UrlValidator.getInstance().isValid(url)) {
+                this.parseUrl(url, tags)
+            } else {
+                this.parseNormal(blocks, tags)
+            }
+        } else {
+            this.parseNormal(blocks, tags)
+        }
+        return notionService.createPage(page)
+    }
+
+    /**
+     * 解析url
+     */
+    private fun parseUrl(url: String, tags: JSONArray): PageObj {
+        val doc: Document = Jsoup.connect(url).get()
+        val title = doc.title()
+        val children = listOf(
+            mutableMapOf(
+                "object" to "block",
+                "type" to "paragraph",
+                "paragraph" to mapOf(
+                    "text" to listOf(
+                        mapOf(
+                            "type" to "text",
+                            "text" to mapOf(
+                                "content" to url,
+                                "link" to mapOf(
+                                    "url" to url
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
         val page = PageObj()
+        page.properties = this.getProperties(title, tags)
+        page.children = children
+        return page
+    }
+
+    /**
+     * 普通解析
+     */
+    private fun parseNormal(blocks: List<String>, tags: JSONArray): PageObj {
+        val page = PageObj()
+
+        page.properties = this.getProperties(blocks.first().trim(), tags)
+        page.children = this.getChildren(blocks)
+        return page
+    }
+
+    /**
+     * 获取属性
+     */
+    private fun getProperties(title: String, tags: JSONArray): MutableMap<String, Any> {
         val properties: MutableMap<String, Any> =
             mutableMapOf(
                 "Name" to mapOf(
@@ -39,7 +102,7 @@ class SnippetsService {
                         mapOf(
                             "type" to "text",
                             "text" to mapOf(
-                                "content" to blocks.first()
+                                "content" to title
                             )
                         )
                     )
@@ -50,8 +113,14 @@ class SnippetsService {
                 "multi_select" to tags
             )
         }
-        page.properties = properties
-        page.children = blocks.filter { it.isNotBlank() }.map { block ->
+        return properties
+    }
+
+    /**
+     * 获取文章内容
+     */
+    private fun getChildren(blocks: List<String>): List<MutableMap<String, Any>> {
+        return blocks.filter { it.isNotBlank() }.map { block ->
             mutableMapOf(
                 "object" to "block",
                 "type" to "paragraph",
@@ -67,6 +136,5 @@ class SnippetsService {
                 )
             )
         }
-        return notionService.createPage(page)
     }
 }
