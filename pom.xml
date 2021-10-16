@@ -11,8 +11,8 @@
     <groupId>site.notion.timothy-pro</groupId>
     <artifactId>notion-text-snippets</artifactId>
     <version>0.0.1</version>
-    <name>notion-wechat-snippets</name>
-    <description>notion-wechat-snippets</description>
+    <name>notion-text-snippets</name>
+    <description>notion-text-snippets</description>
     <properties>
         <java.version>1.8</java.version>
         <kotlin.version>1.5.31</kotlin.version>
