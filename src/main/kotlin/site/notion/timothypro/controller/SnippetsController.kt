@@ -2,10 +2,7 @@ package site.notion.timothypro.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import site.notion.timothypro.service.SnippetsService
 
 /**
@@ -19,8 +16,8 @@ class SnippetsController {
     private lateinit var snippetsService: SnippetsService
 
     @PostMapping
-    fun save(content: String): ResponseEntity<String> {
-        val response = snippetsService.save(content)
+    fun save(@RequestHeader token: String, @RequestHeader parentId: String, content: String): ResponseEntity<String> {
+        val response = snippetsService.save(data = content, token = token, parentId = content)
         return ResponseEntity.status(response.code).body(response.body?.string())
     }
 

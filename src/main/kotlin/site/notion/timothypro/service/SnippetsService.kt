@@ -19,7 +19,7 @@ class SnippetsService {
     @Autowired
     private lateinit var notionService: NotionService
 
-    fun save(data: String): Response {
+    fun save(data: String, token: String, parentId: String): Response {
         val blocks = data.split("\n")
         if (blocks.isEmpty()) throw Exception("no data!")
         // 标签
@@ -46,7 +46,7 @@ class SnippetsService {
         } else {
             this.parseNormal(blocks, tags)
         }
-        return notionService.createPage(page)
+        return notionService.createPage(page, token, parentId)
     }
 
     /**
