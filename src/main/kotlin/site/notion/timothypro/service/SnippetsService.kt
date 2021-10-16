@@ -46,7 +46,7 @@ class SnippetsService {
         } else {
             this.parseNormal(blocks, tags)
         }
-        return notionService.createPage(page, token, parentId)
+        return notionService.createPage(page = page, token = token, parentId = parentId)
     }
 
     /**

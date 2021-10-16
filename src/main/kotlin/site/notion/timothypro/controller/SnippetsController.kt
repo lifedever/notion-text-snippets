@@ -17,7 +17,7 @@ class SnippetsController {
 
     @PostMapping
     fun save(@RequestHeader token: String, @RequestHeader parentId: String, content: String): ResponseEntity<String> {
-        val response = snippetsService.save(data = content, token = token, parentId = content)
+        val response = snippetsService.save(data = content, token = token, parentId = parentId)
         return ResponseEntity.status(response.code).body(response.body?.string())
     }
 
