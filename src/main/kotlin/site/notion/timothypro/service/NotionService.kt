@@ -47,7 +47,7 @@ class NotionService {
             .post(
                 data.toRequestBody(JSON)
             ).build()
-        logger.info("Post JSON: $data")
+        logger.debug("Post JSON: $data")
         return this.getClient().newCall(request).execute()
     }
 
