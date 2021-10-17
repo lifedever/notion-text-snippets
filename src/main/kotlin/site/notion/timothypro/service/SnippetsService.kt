@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import site.notion.timothypro.bean.PageObj
+import site.notion.timothypro.util.TextUtil
 
 
 /**
@@ -125,16 +126,55 @@ class SnippetsService {
                 "object" to "block",
                 "type" to "paragraph",
                 "paragraph" to mapOf(
-                    "text" to listOf(
-                        mapOf(
-                            "type" to "text",
-                            "text" to mapOf(
-                                "content" to block
-                            )
-                        )
+                    "text" to this.resolveBlock(block)
+                )
+            )
+        }
+    }
+
+    /**
+     * 解析一行数据
+     *  - url 解析
+     */
+    private fun resolveBlock(block: String): List<Map<String, *>> {
+        val links = TextUtil.getLinks(block)
+        return if (links.isEmpty()) {
+            listOf(
+                mapOf(
+                    "type" to "text",
+                    "text" to mapOf(
+                        "content" to block
                     )
                 )
             )
+        } else {
+            val texts = block.splitToSequence(*links.toTypedArray())
+            val results = mutableListOf<Map<String, *>>()
+            texts.forEachIndexed { index, txt ->
+                results.add(
+                    mapOf(
+                        "type" to "text",
+                        "text" to mapOf(
+                            "content" to txt
+                        )
+                    )
+                )
+                if (index < links.size) {
+                    results.add(
+                        mapOf(
+                            "type" to "text",
+                            "text" to mapOf(
+                                "content" to links[index],
+                                "link" to mapOf(
+                                    "url" to links[index]
+                                )
+                            )
+                        )
+                    )
+                }
+            }
+
+            return results
         }
     }
 }
