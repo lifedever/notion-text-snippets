@@ -7,6 +7,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import site.notion.timothypro.bean.Language
 import site.notion.timothypro.bean.PageObj
 import site.notion.timothypro.util.TextUtil
 
@@ -20,7 +21,21 @@ class SnippetsService {
     @Autowired
     private lateinit var notionService: NotionService
 
-    fun save(data: String, token: String, parentId: String): Response {
+    private fun getTagKey(language: Language): String {
+        return when(language) {
+            Language.zh_CN -> "标签"
+            Language.en_US -> "Tags"
+        }
+    }
+
+    private fun getDefaultTagName(language: Language): String {
+        return when(language) {
+            Language.zh_CN -> "未分类"
+            Language.en_US -> "Unsorted"
+        }
+    }
+
+    fun save(data: String, token: String, parentId: String, language: Language): Response {
         val blocks = data.split("\n")
         if (blocks.isEmpty()) throw Exception("no data!")
         // 标签
@@ -30,7 +45,7 @@ class SnippetsService {
                 tags.put(mapOf("name" to tag))
             }
         } ?: let {
-            tags.put(mapOf("name" to "未分类"))
+            tags.put(mapOf("name" to this.getDefaultTagName(language)))
         }
         // 页面
         val page = if (blocks.size == 1) {
@@ -40,12 +55,12 @@ class SnippetsService {
                 blocks.first()
             }.trim()
             if (UrlValidator.getInstance().isValid(url)) {
-                this.parseUrl(url, tags)
+                this.parseUrl(url, tags, language)
             } else {
-                this.parseNormal(blocks, tags)
+                this.parseNormal(blocks, tags, language)
             }
         } else {
-            this.parseNormal(blocks, tags)
+            this.parseNormal(blocks, tags, language)
         }
         return notionService.createPage(page = page, token = token, parentId = parentId)
     }
@@ -53,7 +68,7 @@ class SnippetsService {
     /**
      * 解析url
      */
-    private fun parseUrl(url: String, tags: JSONArray): PageObj {
+    private fun parseUrl(url: String, tags: JSONArray, language: Language): PageObj {
         val doc: Document = Jsoup.connect(url).get()
         val title = doc.title()
         val children = listOf(
@@ -76,7 +91,7 @@ class SnippetsService {
             )
         )
         val page = PageObj()
-        page.properties = this.getProperties(title, tags)
+        page.properties = this.getProperties(title, tags, language)
         page.children = children
         return page
     }
@@ -84,10 +99,10 @@ class SnippetsService {
     /**
      * 普通解析
      */
-    private fun parseNormal(blocks: List<String>, tags: JSONArray): PageObj {
+    private fun parseNormal(blocks: List<String>, tags: JSONArray, language: Language): PageObj {
         val page = PageObj()
 
-        page.properties = this.getProperties(blocks.first().trim(), tags)
+        page.properties = this.getProperties(blocks.first().trim(), tags, language)
         page.children = this.getChildren(blocks)
         return page
     }
@@ -95,7 +110,7 @@ class SnippetsService {
     /**
      * 获取属性
      */
-    private fun getProperties(title: String, tags: JSONArray): MutableMap<String, Any> {
+    private fun getProperties(title: String, tags: JSONArray, language: Language): MutableMap<String, Any> {
         val properties: MutableMap<String, Any> =
             mutableMapOf(
                 "Name" to mapOf(
@@ -110,7 +125,7 @@ class SnippetsService {
                 )
             )
         if (tags.isNotEmpty()) {
-            properties["标签"] = mapOf(
+            properties[this.getTagKey(language)] = mapOf(
                 "multi_select" to tags
             )
         }
