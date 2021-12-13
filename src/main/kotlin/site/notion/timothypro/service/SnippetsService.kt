@@ -6,6 +6,7 @@ import org.apache.commons.validator.routines.UrlValidator
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import site.notion.timothypro.bean.Language
 import site.notion.timothypro.bean.PageObj
@@ -21,15 +22,18 @@ class SnippetsService {
     @Autowired
     private lateinit var notionService: NotionService
 
+    @Value("\${app.notion.title.max-length}")
+    private var titleMaxLength: Int = 0
+
     private fun getTagKey(language: Language): String {
-        return when(language) {
+        return when (language) {
             Language.zh_CN -> "标签"
             Language.en_US -> "Tags"
         }
     }
 
     private fun getDefaultTagName(language: Language): String {
-        return when(language) {
+        return when (language) {
             Language.zh_CN -> "未分类"
             Language.en_US -> "Unsorted"
         }
@@ -39,14 +43,10 @@ class SnippetsService {
         val blocks = data.split("\n")
         if (blocks.isEmpty()) throw Exception("no data!")
         // 标签
-        val tags = JSONArray()
-        blocks.findLast { it.contains("#") }?.let { block ->
-            block.split("#").lastOrNull()?.trim()?.let { tag ->
-                tags.put(mapOf("name" to tag))
-            }
-        } ?: let {
-            tags.put(mapOf("name" to this.getDefaultTagName(language)))
-        }
+        val tags = this.getTags(
+            blocks = blocks,
+            language = language
+        )
         // 页面
         val page = if (blocks.size == 1) {
             val url = if (blocks.first().contains("#") && blocks.first().split("#").size == 2) {
@@ -63,6 +63,18 @@ class SnippetsService {
             this.parseNormal(blocks, tags, language)
         }
         return notionService.createPage(page = page, token = token, parentId = parentId)
+    }
+
+    private fun getTags(blocks: List<String>, language: Language): JSONArray {
+        val tags = JSONArray()
+        blocks.findLast { it.contains("#") }?.let { block ->
+            block.split("#").lastOrNull()?.trim()?.let { tag ->
+                tags.put(mapOf("name" to tag))
+            }
+        } ?: let {
+            tags.put(mapOf("name" to this.getDefaultTagName(language)))
+        }
+        return tags
     }
 
     /**
@@ -101,8 +113,16 @@ class SnippetsService {
      */
     private fun parseNormal(blocks: List<String>, tags: JSONArray, language: Language): PageObj {
         val page = PageObj()
-
-        page.properties = this.getProperties(blocks.first().trim(), tags, language)
+        val title = blocks.first().trim().let {
+            if (it.length > titleMaxLength) {
+                it.substring(0, titleMaxLength).plus("...")
+            } else it
+        }
+        page.properties = this.getProperties(
+            title = title,
+            tags = tags,
+            language = language
+        )
         page.children = this.getChildren(blocks)
         return page
     }
