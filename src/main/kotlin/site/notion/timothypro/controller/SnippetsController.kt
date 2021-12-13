@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import site.notion.timothypro.bean.Language
 import site.notion.timothypro.service.SnippetsService
-import java.util.*
 
 /**
  * @author gefangshuai
@@ -34,10 +33,5 @@ class SnippetsController {
     }
 
     @GetMapping
-    fun hello(): Map<String, Any> {
-        return mapOf(
-            "greet" to "Hello World",
-            "timestamp" to Date()
-        )
-    }
+    fun hello() = "Snippets Running!"
 }
