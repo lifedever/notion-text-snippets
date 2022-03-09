@@ -20,6 +20,10 @@ import site.notion.timothypro.bean.PageObj
 class NotionService {
     @Value("\${app.notion.notion-version}")
     private lateinit var notionVersion: String
+
+    @Value("\${app.notion.notion-url}")
+    private lateinit var notionApiUrl: String
+
     private var client: OkHttpClient? = null
     private val logger = LoggerFactory.getLogger(NotionService::class.java)
 
@@ -35,7 +39,7 @@ class NotionService {
     private fun initPostRequest(url: String, token: String): Request.Builder {
         return Request.Builder()
             .header("Authorization", "Bearer $token")
-            .header("Notion-Version", "$notionVersion")
+            .header("Notion-Version", notionVersion)
             .header("Content-Type", "application/json")
             .url(url)
     }
@@ -43,7 +47,7 @@ class NotionService {
     fun createPage(page: PageObj, token: String, parentId: String): Response {
         page.parent = PageObj.Parent(parentId)
         val data = JSONObject(page).toString()
-        val request = initPostRequest("https://api.notion.com/v1/pages", token)
+        val request = initPostRequest(notionApiUrl, token)
             .post(
                 data.toRequestBody(JSON)
             ).build()
