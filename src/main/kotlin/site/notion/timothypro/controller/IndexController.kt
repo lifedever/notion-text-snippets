@@ -20,9 +20,10 @@ class IndexController {
     @GetMapping("/")
     fun hello(): Map<String, Any> {
         return mapOf(
-            "Greet" to "Hello Notion!",
+            "Greet" to "Hello Notion Text Snippets!",
             "Timestamp" to LocalDateTime.now(),
-            "Call times (since server up)" to requestRecordContext.callTimes
+            "Call times (since server up)" to requestRecordContext.getLogs().size,
+            "Visitors (Statistics by IP)" to requestRecordContext.getLogs().groupBy { it.ip }.size
         )
     }
 }

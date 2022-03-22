@@ -1,6 +1,10 @@
 package site.notion.timothypro.context
 
+import cn.hutool.extra.servlet.ServletUtil
 import org.springframework.stereotype.Component
+import site.notion.timothypro.bean.AccessLogItem
+import java.util.Date
+import javax.servlet.http.HttpServletRequest
 
 /**
  * @author gefangshuai
@@ -8,11 +12,17 @@ import org.springframework.stereotype.Component
  */
 @Component
 class RequestRecordContext {
-    var callTimes: Int = 0
+    private var logs: MutableList<AccessLogItem> = mutableListOf()
 
-    fun incCallTimes() {
-        synchronized(this) {
-            this.callTimes += 1
-        }
+    fun log(request: HttpServletRequest) {
+        logs.add(
+            AccessLogItem(
+                ip = ServletUtil.getClientIP(request),
+                accessTime = Date()
+            )
+        )
     }
+
+    fun getLogs() = logs
+
 }

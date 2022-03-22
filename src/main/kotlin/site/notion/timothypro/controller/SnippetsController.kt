@@ -7,6 +7,7 @@ import site.notion.timothypro.bean.Language
 import site.notion.timothypro.context.RequestRecordContext
 import site.notion.timothypro.service.SnippetsService
 import java.util.*
+import javax.servlet.http.HttpServletRequest
 
 /**
  * @author gefangshuai
@@ -31,10 +32,11 @@ class SnippetsController {
         @RequestHeader token: String,
         @RequestHeader parentId: String,
         @RequestHeader(defaultValue = "zh_CN") language: Language,
-        content: String
+        content: String,
+        request: HttpServletRequest
     ): ResponseEntity<String> {
         val response = snippetsService.save(data = content, token = token, parentId = parentId, language = language)
-        requestRecordContext.incCallTimes()
+        requestRecordContext.log(request)
         return ResponseEntity.status(response.code).body(response.body?.string())
     }
 
