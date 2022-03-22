@@ -22,7 +22,7 @@ class IndexController {
         return mapOf(
             "Greet" to "Hello Notion Text Snippets!",
             "Timestamp" to LocalDateTime.now(),
-            "Call times (since server up)" to requestRecordContext.getLogs().size,
+            "Call times (Since server up)" to requestRecordContext.getLogs().size,
             "Visitors (Statistics by IP)" to requestRecordContext.getLogs().groupBy { it.ip }.size
         )
     }
