@@ -1,5 +1,10 @@
 Notion Text Snippets
 ----
+# 更新记录
+## 2022-03-29
+- 增加每日Bing壁纸
+
+# 使用说明
 Notion + iOS快捷指令实现的随时随地文本收集功能
 ![img_1.png](img_1.png)
 
