@@ -2,7 +2,11 @@ package site.notion.timothypro.service
 
 import cn.hutool.http.HttpUtil
 import cn.hutool.json.JSONObject
+import org.apache.commons.io.IOUtils
+import org.apache.tomcat.util.http.fileupload.FileUtils
 import org.springframework.stereotype.Service
+import java.io.OutputStream
+import java.net.URL
 
 @Service
 class BingImageService {
@@ -23,7 +27,12 @@ class BingImageService {
      */
     private val apiUrl = "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN"
 
-    fun getImage(): String {
+    fun getImage(outputStream: OutputStream) {
+        val inputStream = URL(getImageUrl()).openStream()
+        IOUtils.copy(inputStream, outputStream)
+    }
+
+    fun getImageUrl(): String {
         val responseStr = HttpUtil.get(apiUrl)
         return JSONObject(responseStr).getByPath("images[0].url").toString().let {
             "https://cn.bing.com".plus(it)
