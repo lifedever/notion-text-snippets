@@ -19,7 +19,7 @@ class BingImageController {
         try {
             response.setHeader("Content-Type", "image/png")
             response.contentType = "image/png"
-            response.setDateHeader("expires", DateTime.now().plusDays(3).millis)
+            response.setDateHeader("expires", DateTime.now().plusHours(6).millis)
             response.setHeader("Cache-Control", "Public")
             response.setHeader("Pragma", "Public")
             bingImageService.getImage(response.outputStream)
