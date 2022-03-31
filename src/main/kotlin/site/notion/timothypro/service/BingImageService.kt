@@ -1,15 +1,26 @@
 package site.notion.timothypro.service
 
+import cn.hutool.core.io.FileUtil
+import cn.hutool.core.io.file.PathUtil
 import cn.hutool.http.HttpUtil
 import cn.hutool.json.JSONObject
+import org.apache.commons.io.FileUtils
 import org.apache.commons.io.IOUtils
-import org.apache.tomcat.util.http.fileupload.FileUtils
+import org.joda.time.DateTime
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import site.notion.timothypro.util.pathAppend
+import java.io.File
+import java.io.FileInputStream
 import java.io.OutputStream
 import java.net.URL
+import kotlin.io.path.Path
 
 @Service
 class BingImageService {
+    @Value("\${app.wallpaper.storage-path}")
+    private lateinit var wrapperStoragePath: String
+
     /**
 
     参数名称	值含义
@@ -25,17 +36,23 @@ class BingImageService {
     zh-CN
     ...
      */
-    private val apiUrl = "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN"
 
-    fun getImage(outputStream: OutputStream) {
-        val inputStream = URL(getImageUrl()).openStream()
+    fun getImage(outputStream: OutputStream, mkt: String) {
+        val destPath = wrapperStoragePath.pathAppend(mkt).pathAppend(DateTime.now().toString("yyyy-MM-dd").plus(".jpg"))
+        FileUtil.mkParentDirs(destPath)
+        val imageFile = File(destPath)
+        if (!imageFile.exists())
+            HttpUtil.downloadFile(getImageUrl(mkt), imageFile)
+
+        val inputStream = FileInputStream(imageFile)
         IOUtils.copy(inputStream, outputStream)
+        IOUtils.close(inputStream)
     }
 
-    fun getImageUrl(): String {
-        val responseStr = HttpUtil.get(apiUrl)
+    fun getImageUrl(mkt: String): String {
+        val responseStr = HttpUtil.get("https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=${mkt}")
         return JSONObject(responseStr).getByPath("images[0].url").toString().let {
-            "https://cn.bing.com".plus(it)
+            "https://www.bing.com".plus(it)
         }
     }
 }
