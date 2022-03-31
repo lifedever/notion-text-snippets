@@ -9,4 +9,5 @@ services:
       - "65000:65000"
     restart: always
     volumes:
-      - ~/logs:/docker/logs
+      - /opt/notion-text-snippets/logs:/docker/logs
+      - /opt/notion-text-snippets/wallpaper:/docker/wallpaper
