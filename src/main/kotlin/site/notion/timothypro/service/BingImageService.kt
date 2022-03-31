@@ -1,6 +1,7 @@
 package site.notion.timothypro.service
 
 import cn.hutool.core.io.FileUtil
+import cn.hutool.http.HttpRequest
 import cn.hutool.http.HttpUtil
 import cn.hutool.json.JSONObject
 import org.apache.commons.io.IOUtils
@@ -16,6 +17,7 @@ import java.io.OutputStream
 @Service
 class BingImageService {
     private val logger = LoggerFactory.getLogger(BingImageService::class.java)
+
     @Value("\${app.wallpaper.storage-path}")
     private lateinit var wrapperStoragePath: String
 
@@ -48,10 +50,18 @@ class BingImageService {
     }
 
     fun getImageUrl(mkt: String): String {
-        val responseStr = HttpUtil.get("https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=${mkt}")
+        val apiUrl = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=${mkt}"
+        val bingURL = "https://www.bing.com"
+        val responseStr = HttpRequest.get(apiUrl)
+            .header("Referer", bingURL)
+            .header(
+                "User-Agent",
+                "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 10.0; WOW64; Trident/8.0; .NET4.0C; .NET4.0E)"
+            ).execute()
+            .body()
         logger.info("responseStr: {}", responseStr)
         return JSONObject(responseStr).getByPath("images[0].url").toString().let {
-            "https://www.bing.com".plus(it)
+            bingURL.pathAppend(it)
         }
     }
 }
