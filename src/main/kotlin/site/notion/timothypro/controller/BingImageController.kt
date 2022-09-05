@@ -2,15 +2,13 @@ package site.notion.timothypro.controller
 
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import site.notion.timothypro.service.BingImageService
 import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping("/bing/image")
+@CrossOrigin(origins = ["*"])
 class BingImageController {
     @Autowired
     private lateinit var bingImageService: BingImageService
